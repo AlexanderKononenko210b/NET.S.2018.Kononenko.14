@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Algorithms
 {
@@ -7,7 +8,7 @@ namespace Algorithms
     /// Custom class queue
     /// </summary>
     /// <typeparam name="T">type object for save in queue</typeparam>
-    public class CustomQueue<T> : ICollection, IEnumerable
+    public class CustomQueue<T> : IEnumerable<T>
     {
         private const int INITIAL_SIZE = 4;
 
@@ -21,10 +22,11 @@ namespace Algorithms
 
         private int count;
 
-        private bool isreadonly;
-
         private T[] array;
 
+        /// <summary>
+        /// Constructor for type CustomQueue
+        /// </summary>
         public CustomQueue()
         {
             this.size = INITIAL_SIZE;
@@ -34,6 +36,21 @@ namespace Algorithms
             this.head = 0;
 
             this.tail = 0;
+        }
+
+        /// <summary>
+        /// Property for control version CustomQueue
+        /// </summary>
+        public int Version { get; set; }
+
+        /// <summary>
+        /// Index for the access element CustomQueue
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public T this[int index]
+        {
+            get { return this.array[index]; }
         }
 
         /// <summary>
@@ -80,37 +97,11 @@ namespace Algorithms
         public int Size => array.Length;
 
         /// <summary>
-        /// Property flag for the determining that instance is read only
-        /// </summary>
-        public bool IsReadOnly
-        {
-            get => isreadonly;
-
-            set
-            {
-                isreadonly = value;
-            }
-        }
-
-        /// <summary>
-        /// Property for object synchronized
-        /// </summary>
-        public object SyncRoot => throw new NotImplementedException();
-
-        /// <summary>
-        /// Property flag for synchronized
-        /// </summary>
-        public bool IsSynchronized => throw new NotImplementedException();
-
-        /// <summary>
-        /// Method for add new element in queue
+        /// Method for add new element in the end queue
         /// </summary>
         /// <param name="obj">object for add in queue</param>
-        public void Add(T obj)
+        public void Enqueue(T obj)
         {
-            if (IsReadOnly)
-                throw new InvalidOperationException($"Queue only for read");
-
             if (obj == null)
                 throw new ArgumentNullException($"Argument {nameof(obj)} is null");
             if (tail == 0)
@@ -134,7 +125,7 @@ namespace Algorithms
         /// <returns>last element in queue</returns>
         public T Peek()
         {
-            if(Count == 0)
+            if (Count == 0)
             {
                 throw new InvalidOperationException($"Queue is empty");
             }
@@ -146,17 +137,14 @@ namespace Algorithms
         /// Method for return first element in array with delete this element
         /// </summary>
         /// <returns>first element in queue</returns>
-        public T DelPeek()
+        public T Dequeue()
         {
-            if (IsReadOnly)
-                throw new InvalidOperationException($"Queue only for read");
-
             if (Count == 0)
             {
                 throw new InvalidOperationException($"Queue is empty");
             }
 
-            var firstElement = array[0];
+            var firstElement = array[head];
 
             var newArray = new T[size];
 
@@ -172,9 +160,6 @@ namespace Algorithms
         /// </summary>
         public void Clear()
         {
-            if (IsReadOnly)
-                throw new InvalidOperationException($"Queue only for read");
-
             if (Count == 0)
                 throw new InvalidOperationException($"Queue is already clear");
 
@@ -192,15 +177,11 @@ namespace Algorithms
         /// <returns>true if queue contain element</returns>
         public bool Contains(T item)
         {
-            if(item == null)
+            if (item == null)
                 throw new ArgumentNullException($"Argument {nameof(item)} is null");
 
             if (Count == 0)
                 throw new InvalidOperationException($"Queue is Empty");
-
-            //for (int i = 0; i <= tail; i++)
-            //    if (array[i].Equals(item))
-            //        return true;
 
             var enumerator = GetEnumerator();
 
@@ -211,48 +192,102 @@ namespace Algorithms
         }
 
         /// <summary>
-        /// Method for copy all element queue in array
+        /// Method for get instance struct CustomEnumerator
         /// </summary>
-        /// <param name="newArray">new array</param>
-        /// <param name="index">index for copy</param>
-        public void CopyTo(Array newArray, int index)
+        /// <returns>instance struct CustomEnumerator</returns>
+        public IEnumerator<T> GetEnumerator()
         {
-            if(newArray == null)
-                throw new ArgumentNullException($"Argument {nameof(array)} is null");
-
-            if(index < 0)
-                throw new ArgumentOutOfRangeException($"Argument {nameof(index)} is out of range");
-
-            var castResult = newArray as T[];
-
-            if (castResult == null)
-                throw new InvalidCastException($"Input argument {nameof(newArray)} is not cast to {nameof(T)}[]");
-
-            if (castResult.Length < Count)
-                throw new InvalidOperationException($"Lenth argument {nameof(newArray)} must be more or equals count of elements in queue");
-
-            if(castResult.Length - 1 < index)
-                throw new ArgumentOutOfRangeException($"Argument {nameof(index)} must be less or equals index last elements in argument {nameof(newArray)}");
-
-            if (index > tail)
-                for (int i = index; i < array.Length; i++)
-                    castResult[i] = default(T);
-            else
-                for (int i = index; i <= tail; i++)
-                    castResult[i] = this.array[i];
-
-            newArray = castResult;
+            return new CustomEnumerator(this);
         }
 
         /// <summary>
-        /// Method return object type IEnumerator
+        /// Explisit call method interface
         /// </summary>
-        /// <returns></returns>
-        public IEnumerator GetEnumerator()
+        /// <returns>result method GetEnumerator()</returns>
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            if (Count == 0)
-                throw new InvalidOperationException($"Queue does not contain element");
-            return array.GetEnumerator();
+            return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Custom struct representing object for collection iteration 
+        /// </summary>
+        private struct CustomEnumerator : IEnumerator<T>
+        {
+            private CustomQueue<T> customQueue;
+
+            private int version;
+
+            private T current;
+
+            private int index;
+
+            /// <summary>
+            /// Readonly property representing element in CustomQueue
+            /// </summary>
+            public T Current
+            {
+                get
+                {
+                    if (index == -1)
+                        throw new InvalidOperationException($"Enumeration was not started");
+                        
+                        
+                    if(index == customQueue.Count)
+                        throw new InvalidOperationException($"Enumeration was ended");
+
+                    return customQueue[index];
+                }
+            }
+
+            object IEnumerator.Current => this.Current;
+
+            /// <summary>
+            /// Constructor for struct CustomEnumerator
+            /// </summary>
+            /// <param name="customQueue">collection for iteration</param>
+            public CustomEnumerator(CustomQueue<T> customQueue)
+            {
+                this.customQueue = customQueue;
+
+                this.version = customQueue.Version;
+
+                this.index = -1;
+
+                this.current = default(T);
+            }
+
+            /// <summary>
+            /// Method for movement through collection type CustomQueue
+            /// </summary>
+            /// <returns>true if next element in collection is exist</returns>
+            public bool MoveNext()
+            {
+                if (this.version != customQueue.Version)
+                    throw new InvalidOperationException($"CustonQueue was changed");
+
+                index++;
+
+                if (index > -1 && index < customQueue.Count)
+                    return true;
+                else
+                    return false;
+            }
+
+            /// <summary>
+            /// Method for reset index in a start position
+            /// </summary>
+            public void Reset()
+            {
+                if (this.version != customQueue.Version)
+                    throw new InvalidOperationException($"CustonQueue was changed");
+
+                this.index = -1;
+
+                this.current = default(T);
+            }
+
+            void IDisposable.Dispose() { }
         }
     }
 }

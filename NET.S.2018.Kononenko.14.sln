@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithms", "Algorithms\Algorithms.csproj", "{4C00E403-E3E0-4597-9BEE-A652C8ECD993}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithms.Test.cs", "Algorithms.Test.cs\Algorithms.Test.cs.csproj", "{FEA5572D-5FE1-44EE-8C88-673D5505226A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithms.Test", "Algorithms.Test.cs\Algorithms.Test.csproj", "{FEA5572D-5FE1-44EE-8C88-673D5505226A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlarmClock", "AlarmClock\AlarmClock.csproj", "{C1163020-7360-44FB-948F-2A8E27FAC3F0}"
 EndProject

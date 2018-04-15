@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Algorithms;
 
-namespace Algorithms.Test.cs
+namespace Algorithms.Test
 {
     /// <summary>
     /// Class for test class CustomQueue
@@ -22,15 +22,15 @@ namespace Algorithms.Test.cs
         }
 
         /// <summary>
-        /// Test add new elements as last in Queue
+        /// Test Enqueue new elements as last in Queue
         /// </summary>
         [TestCase]
-        public void Add_CustomQueue_Type_Int()
+        public void Enqueue_CustomQueue_Type_Int()
         {
             var customQueue = new CustomQueue<int>();
-            customQueue.Add(5);
-            customQueue.Add(6);
-            customQueue.Add(9);
+            customQueue.Enqueue(5);
+            customQueue.Enqueue(6);
+            customQueue.Enqueue(9);
             Assert.AreEqual(3, customQueue.Count);
             Assert.IsTrue(customQueue.Contains(5));
             Assert.IsTrue(customQueue.Contains(6));
@@ -40,59 +40,59 @@ namespace Algorithms.Test.cs
         }
 
         /// <summary>
-        /// Test add new elements as last in Queue
+        /// Test Dequeue element in CustomQueue
         /// </summary>
         [TestCase]
-        public void DelPeek_CustomQueue_Type_Int()
+        public void Dequeue_CustomQueue_Type_Int()
         {
             var customQueue = new CustomQueue<int>();
-            customQueue.Add(5);
-            customQueue.Add(6);
-            customQueue.Add(9);
+            customQueue.Enqueue(5);
+            customQueue.Enqueue(6);
+            customQueue.Enqueue(9);
             Assert.AreEqual(5, customQueue.Peek());
-            var assert1 = customQueue.DelPeek();
+            var assert1 = customQueue.Dequeue();
             Assert.AreEqual(5, assert1);
             Assert.AreEqual(6, customQueue.Peek());
         }
 
         /// <summary>
-        /// Test add new elements as last in Queue and resize size queue
+        /// Test Enqueue new elements as last in Queue and resize size queue
         /// </summary>
         [TestCase]
-        public void Add_With_Resize_CustomQueue_Type_Int()
+        public void Enqueue_With_Resize_CustomQueue_Type_Int()
         {
             var customQueue = new CustomQueue<int>();
-            customQueue.Add(5);
-            customQueue.Add(6);
-            customQueue.Add(9);
+            customQueue.Enqueue(5);
+            customQueue.Enqueue(6);
+            customQueue.Enqueue(9);
             Assert.AreEqual(4, customQueue.Size);
-            customQueue.Add(10);
+            customQueue.Enqueue(10);
             Assert.AreEqual(8, customQueue.Size);
-            customQueue.Add(8);
+            customQueue.Enqueue(8);
             Assert.AreEqual(8, customQueue.Size);
-            customQueue.Add(23);
+            customQueue.Enqueue(23);
             Assert.AreEqual(8, customQueue.Size);
-            customQueue.Add(34);
+            customQueue.Enqueue(34);
             Assert.AreEqual(8, customQueue.Size);
-            customQueue.Add(23);
+            customQueue.Enqueue(23);
             Assert.AreEqual(16, customQueue.Size);
         }
 
         /// <summary>
-        /// Test add new elements as last in Queue and resize size queue
+        /// Test Clear all elements in CustomQueue
         /// </summary>
         [TestCase]
         public void Clear_CustomQueue_Type_Int()
         {
             var customQueue = new CustomQueue<int>();
-            customQueue.Add(5);
-            customQueue.Add(6);
-            customQueue.Add(9);
-            customQueue.Add(10);
-            customQueue.Add(8);
-            customQueue.Add(23);
-            customQueue.Add(34);
-            customQueue.Add(23);
+            customQueue.Enqueue(5);
+            customQueue.Enqueue(6);
+            customQueue.Enqueue(9);
+            customQueue.Enqueue(10);
+            customQueue.Enqueue(8);
+            customQueue.Enqueue(23);
+            customQueue.Enqueue(34);
+            customQueue.Enqueue(23);
             Assert.AreEqual(8, customQueue.Count);
             Assert.AreEqual(16, customQueue.Size);
             customQueue.Clear();
@@ -101,47 +101,26 @@ namespace Algorithms.Test.cs
         }
 
         /// <summary>
-        /// Test add new elements as last in Queue and resize size queue
+        /// Test Enqueue new elements as last in Queue and resize size queue
         /// </summary>
         [TestCase]
-        public void CopyTo_CustomQueue_Type_Int()
+        public void Foreach_CustomQueue_Type_Int()
         {
             var customQueue = new CustomQueue<int>();
-            customQueue.Add(5);
-            customQueue.Add(6);
-            customQueue.Add(9);
-            customQueue.Add(10);
-            customQueue.Add(8);
-            customQueue.Add(23);
-            customQueue.Add(34);
-            customQueue.Add(23);
-            Assert.AreEqual(8, customQueue.Count);
-            Assert.AreEqual(16, customQueue.Size);
-
-            var newArray = new int[customQueue.Size];
-            customQueue.CopyTo(newArray, 0);
-            Assert.AreEqual(customQueue.Size, newArray.Length);
-            Assert.AreEqual(5, newArray[0]);
-            Assert.AreEqual(10, newArray[3]);
-            Assert.AreEqual(23, newArray[7]);
-        }
-
-        /// <summary>
-        /// Test Custom Queue if flag ReadOnly in True
-        /// </summary>
-        [TestCase]
-        public void ReadOnly_CustomQueue_Type_Int()
-        {
-            var customQueue = new CustomQueue<int>();
-            customQueue.Add(5);
-            customQueue.Add(6);
-            customQueue.Add(9);
-            customQueue.Add(10);
-            customQueue.IsReadOnly = true;
-
-            Assert.Throws<InvalidOperationException>(() => customQueue.Add(4));
-            Assert.Throws<InvalidOperationException>(() => customQueue.DelPeek());
-            Assert.Throws<InvalidOperationException>(() => customQueue.Clear());
+            customQueue.Enqueue(5);
+            customQueue.Enqueue(6);
+            customQueue.Enqueue(9);
+            customQueue.Enqueue(10);
+            customQueue.Enqueue(8);
+            customQueue.Enqueue(23);
+            customQueue.Enqueue(34);
+            customQueue.Enqueue(23);
+            var index = 0;
+            foreach(int number in customQueue)
+            {
+                Assert.AreEqual(customQueue[index], number);
+                index++;
+            }
         }
     }
 }
