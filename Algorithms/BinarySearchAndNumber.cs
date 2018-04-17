@@ -33,12 +33,10 @@ namespace Algorithms
 
             if (comparer == null)
             {
-                var checkImplementIEnumarable = element as IComparable<T>;
+                comparer = Comparer<T>.Default;
 
-                if (checkImplementIEnumarable != null)
-                {
-                    comparer = Comparer<T>.Default;
-                }
+                if (comparer == null)
+                    throw new InvalidOperationException($"Type {nameof(T)} does not contain default sort order comparer");
             }
 
             if (inputArray.Length == 0 || comparer.Compare(inputArray[0], element) > 0 ||
@@ -87,14 +85,10 @@ namespace Algorithms
 
             if (comparison == null)
             {
-                var checkImplementIEnumarable = element as IComparable<T>;
+                comparison = Comparer<T>.Default.Compare;
 
-                if (checkImplementIEnumarable != null)
-                {
-                    var defaultComparer = Comparer<T>.Default;
-
-                    comparison = defaultComparer.Compare;
-                }
+                if(comparison == null)
+                    throw new InvalidOperationException($"Type {nameof(T)} does not contain default sort order comparer");
             }
 
             if (inputArray.Length == 0 || comparison(inputArray[0], element) > 0 ||
@@ -130,7 +124,7 @@ namespace Algorithms
         #region Fibonachi
 
         /// <summary>
-        /// Public method Generator Fibonachi numbers
+        /// Public method Generator Fibonachi numbers for greedy check
         /// </summary>
         /// <param name="number">number - limit</param>
         /// <returns>enumerator fibonachi`s numbers</returns>
@@ -147,7 +141,7 @@ namespace Algorithms
         }
 
         /// <summary>
-        /// Generator Fibonachi numbers
+        /// Private Fibonachi Generator numbers 
         /// </summary>
         /// <param name="number">number - limit</param>
         /// <returns>instance iterator</returns>
