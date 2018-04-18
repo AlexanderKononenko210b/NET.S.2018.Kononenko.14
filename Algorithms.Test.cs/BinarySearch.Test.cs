@@ -22,7 +22,7 @@ namespace Algorithms.Test
         {
             var comparer = new IntComparator();
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparer);
+            var indexFindNumber = inputArray.BinarySearch(number, comparer);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -41,7 +41,7 @@ namespace Algorithms.Test
         {
             var comparer = new DoubleComparator();
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparer);
+            var indexFindNumber = inputArray.BinarySearch(number, comparer);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -63,7 +63,7 @@ namespace Algorithms.Test
 
             comparer = null;
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparer);
+            var indexFindNumber = inputArray.BinarySearch(number, comparer);
 
             if(indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -84,7 +84,7 @@ namespace Algorithms.Test
 
             comparer = null;
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparer);
+            var indexFindNumber = inputArray.BinarySearch(number, comparer);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -106,7 +106,7 @@ namespace Algorithms.Test
 
             Comparison<int> comparison = obj.Compare;
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparison);
+            var indexFindNumber = inputArray.BinarySearch(number, comparison);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -127,7 +127,7 @@ namespace Algorithms.Test
 
             Comparison<double> comparison = obj.Compare;
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparison);
+            var indexFindNumber = inputArray.BinarySearch(number, comparison);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -147,7 +147,7 @@ namespace Algorithms.Test
         {
             Comparison<int> comparison = null;
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparison);
+            var indexFindNumber = inputArray.BinarySearch(number, comparison);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
@@ -166,12 +166,37 @@ namespace Algorithms.Test
         {
             Comparison<double> comparison = null;
 
-            var indexFindNumber = BinarySearchAndNumber.BinarySearch(inputArray, number, comparison);
+            var indexFindNumber = inputArray.BinarySearch(number, comparison);
 
             if (indexFindNumber != null)
                 Assert.AreEqual(result, inputArray[(int)indexFindNumber]);
             else
                 Assert.AreEqual(result, indexFindNumber);
+        }
+
+        /// <summary>
+        /// Test BinarySearch if type does not implement IComparable
+        /// </summary>
+        [Test]
+        public void Point_BinarySearch_If_Type_Does_Not_Implement_IComparable()
+        {
+            Comparison<Point> comparison = null;
+
+            Point[] inputArray = new Point[3];
+
+            var point1 = new Point(14.0, 5.0);
+
+            inputArray[0] = point1;
+
+            var point2 = new Point(22.0, 5.0);
+
+            inputArray[0] = point2;
+
+            var point3 = new Point(2.0, 5.0);
+
+            inputArray[0] = point3;
+
+            Assert.Throws<GetDefaulCompareException>(() => inputArray.BinarySearch(point2, comparison));
         }
     }
 }

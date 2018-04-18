@@ -50,6 +50,7 @@
     <Compile Include="Comparators.cs" />
     <Compile Include="CustomQueue.Test.cs" />
     <Compile Include="Fibonachi.Test.cs" />
+    <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

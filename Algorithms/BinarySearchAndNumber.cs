@@ -14,68 +14,45 @@ namespace Algorithms
         #region BinarySearch
 
         /// <summary>
-        /// Generic method for find element in array
+        /// Generic method for find element in collection implement IEnumerable using IComparer<typeparamref name="TSource"/>
         /// </summary>
-        /// <typeparam name="T">type</typeparam>
+        /// <typeparam name="TSource">type</typeparam>
         /// <param name="inputArray">input array</param>
         /// <param name="element">find element</param>
         /// <param name="comparer">comparer for compare two element in array</param>
-        /// <returns></returns>
-        public static int? BinarySearch<T>(T[] inputArray, T element, IComparer<T> comparer)
+        /// <returns>result of search</returns>
+        public static int? BinarySearch<TSource>(this TSource[] inputArray, TSource element, IComparer<TSource> comparer)
         {
             if (inputArray == null)
-            {
                 throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
-            }
 
             if(element == null)
                 throw new ArgumentNullException($"Argument {nameof(element)} is null");
 
             if (comparer == null)
             {
-                comparer = Comparer<T>.Default;
-
-                if (comparer == null)
-                    throw new InvalidOperationException($"Type {nameof(T)} does not contain default sort order comparer");
+                if(typeof(TSource).GetInterface("IComparable<TSource>") != null || typeof(TSource).GetInterface("IComparable") != null)
+                    comparer = Comparer<TSource>.Default;
+                else
+                    throw new GetDefaulCompareException($"Type {nameof(TSource)} does not contain default sort order comparer");
             }
 
             if (inputArray.Length == 0 || comparer.Compare(inputArray[0], element) > 0 ||
                 comparer.Compare(inputArray[inputArray.Length - 1], element) < 0)
                 return null;
 
-            int indexHelper = 0, indexLeft = 0, indexRight = inputArray.Length - 1;
-
-            while (!(indexLeft >= indexRight))
-            {
-                indexHelper = indexLeft + (indexRight - indexLeft) / 2;
-
-                var resultCompare = comparer.Compare(inputArray[indexHelper], element);
-
-                if (resultCompare == 0)
-                    return indexHelper;
-
-                if (resultCompare > 0)
-                {
-                    indexRight = indexHelper;
-                }
-                else
-                {
-                    indexLeft = indexHelper + 1;
-                }
-            }
-
-            return null;
+            return BinarySearchHelper(inputArray, element, comparer.Compare);
         }
 
         /// <summary>
-        /// Generic method for find element in array
+        /// Generic method for find element in collection implement IEnumerable using Comparison<typeparamref name="TSource"/>
         /// </summary>
-        /// <typeparam name="T">type</typeparam>
+        /// <typeparam name="TSource">type</typeparam>
         /// <param name="inputArray">input array</param>
         /// <param name="element">find element</param>
-        /// <param name="comparer">comparer for compare two element in array</param>
-        /// <returns></returns>
-        public static int? BinarySearch<T>(T[] inputArray, T element, Comparison<T> comparison)
+        /// <param name="comparison">comparer for compare two element in array</param>
+        /// <returns>result of search</returns>
+        public static int? BinarySearch<TSource>(this TSource[] inputArray, TSource element, Comparison<TSource> comparison)
         {
             if (inputArray == null)
                 throw new ArgumentNullException($"Argument {nameof(inputArray)} is null");
@@ -85,16 +62,29 @@ namespace Algorithms
 
             if (comparison == null)
             {
-                comparison = Comparer<T>.Default.Compare;
-
-                if(comparison == null)
-                    throw new InvalidOperationException($"Type {nameof(T)} does not contain default sort order comparer");
+                if (typeof(TSource).GetInterface("IComparable<TSource>") != null || typeof(TSource).GetInterface("IComparable") != null)
+                    comparison = Comparer<TSource>.Default.Compare;
+                else
+                    throw new GetDefaulCompareException($"Type {nameof(TSource)} does not contain default sort order comparer");
             }
 
             if (inputArray.Length == 0 || comparison(inputArray[0], element) > 0 ||
                 comparison(inputArray[inputArray.Length - 1], element) < 0)
                 return null;
 
+            return BinarySearchHelper(inputArray, element, comparison);
+        }
+
+        /// <summary>
+        /// Helper generic method for find element in array using Comparison<typeparamref name="TSource"/>
+        /// </summary>
+        /// <typeparam name="TSource">type</typeparam>
+        /// <param name="inputArray">input array</param>
+        /// <param name="element">find element</param>
+        /// <param name="comparison">comparer for compare two element in array</param>
+        /// <returns>result of search</returns>
+        private static int? BinarySearchHelper<TSource>(TSource[] inputArray, TSource element, Comparison<TSource> comparison)
+        {
             int indexHelper = 0, indexLeft = 0, indexRight = inputArray.Length - 1;
 
             while (!(indexLeft >= indexRight))
@@ -107,13 +97,9 @@ namespace Algorithms
                     return indexHelper;
 
                 if (resultCompare > 0)
-                {
                     indexRight = indexHelper;
-                }
                 else
-                {
                     indexLeft = indexHelper + 1;
-                }
             }
 
             return null;
