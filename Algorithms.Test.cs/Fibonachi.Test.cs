@@ -22,13 +22,11 @@ namespace Algorithms.Test.cs
 
             var numberBorder = 80;
 
-            var index = 2;
+            var index = 0;
 
             foreach(BigInteger element in BinarySearchAndNumber.GeneratorFibonachiNumber(numberBorder))
             {
-                Assert.AreEqual(bigIntegerArray[index], element);
-
-                index++;
+                Assert.AreEqual(bigIntegerArray[index++], element);
             }
         }
 

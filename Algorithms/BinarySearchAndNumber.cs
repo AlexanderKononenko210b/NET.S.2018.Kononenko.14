@@ -135,7 +135,11 @@ namespace Algorithms
         {
             var first = new BigInteger(1);
 
+            yield return first;
+
             var second = first;
+
+            yield return second;
 
             var summ = first + second;
 
